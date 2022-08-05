@@ -1,0 +1,215 @@
+SQL> connect
+Enter user-name: 
+Connected.
+SQL> SET PAGESIZE 100
+SQL> SET LINESIZE 200
+SQL> CREATE TABLE student(
+  2      student_id number(9) CONSTRAINT STUDENT_ID_PK PRIMARY KEY,
+  3      student_name VARCHAR2(30) CONSTRAINT STUDENT_NAME_NN NOT NULL,
+  4      student_address VARCHAR2(30),
+  5      student_major VARCHAR2(30)
+  6  );
+
+Table created.
+
+SQL> DESCRIBE student;
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ STUDENT_ID                                                                                                        NOT NULL NUMBER(9)
+ STUDENT_NAME                                                                                                      NOT NULL VARCHAR2(30)
+ STUDENT_ADDRESS                                                                                                            VARCHAR2(30)
+ STUDENT_MAJOR                                                                                                              VARCHAR2(30)
+
+SQL> CREATE TABLE instructor(
+  2      instructor_id NUMBER(3) CONSTRAINT INSTRUCTOR_ID_PK PRIMARY KEY,
+  3      instructor_name VARCHAR2(30) CONSTRAINT INSTRUCTOR_NAME_NN NOT NULL,
+  4      instructor_office VARCHAR2(7)
+  5  );
+
+Table created.
+
+SQL> DESCRIBE instructor;
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ INSTRUCTOR_ID                                                                                                     NOT NULL NUMBER(3)
+ INSTRUCTOR_NAME                                                                                                   NOT NULL VARCHAR2(30)
+ INSTRUCTOR_OFFICE                                                                                                          VARCHAR2(7)
+
+SQL> CREATE TABLE course(
+  2      course_id VARCHAR2(7) CONSTRAINT COURSE_ID_PK PRIMARY KEY,
+  3      course_title VARCHAR2(30),
+  4      instructor_id number(3),
+  5        FOREIGN KEY (instructor_id)
+  6        REFERENCES instructor (instructor_id)
+  7  );
+
+Table created.
+
+SQL> DESCRIBE course;
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ COURSE_ID                                                                                                         NOT NULL VARCHAR2(7)
+ COURSE_TITLE                                                                                                               VARCHAR2(30)
+ INSTRUCTOR_ID                                                                                                              NUMBER(3)
+
+SQL> CREATE TABLE enroll(
+  2      student_id NUMBER(9),
+  3      course_id VARCHAR2(7),
+  4      stu_course_grade CHAR(1) CHECK (stu_course_grade IN('A', 'B', 'C', 'D', 'F')),
+  5      PRIMARY KEY( student_id, course_id)
+  6  );
+
+Table created.
+
+SQL> DESCRIBE enroll;
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ STUDENT_ID                                                                                                        NOT NULL NUMBER(9)
+ COURSE_ID                                                                                                         NOT NULL VARCHAR2(7)
+ STU_COURSE_GRADE                                                                                                           CHAR(1)
+
+SQL> INSERT INTO student
+  2  VALUES(238300458,'Williams', '208 Brooks', 'CSI' );
+
+1 row created.
+
+SQL> INSERT INTO student
+  2  VALUES(543291073,'Bakker', '104 Philips', 'Acct' );
+
+1 row created.
+
+SQL> INSERT INTO student
+  2  VALUES(695381127,'White', '208 Brooks', 'Math' );
+
+1 row created.
+
+SQL> SELECT * FROM student;
+
+STUDENT_ID STUDENT_NAME                   STUDENT_ADDRESS                STUDENT_MAJOR                                                                                                                  
+---------- ------------------------------ ------------------------------ ------------------------------                                                                                                 
+ 238300458 Williams                       208 Brooks                     CSI                                                                                                                            
+ 543291073 Bakker                         104 Philips                    Acct                                                                                                                           
+ 695381127 White                          208 Brooks                     Math                                                                                                                           
+
+SQL> INSERT INTO instructor
+  2  VALUES(301, 'Codds', 'B104');
+
+1 row created.
+
+SQL> INSERT INTO instructor
+  2  VALUES(451, 'Parsons', 'B317');
+
+1 row created.
+
+SQL> INSERT INTO instructor
+  2  VALUES(255, 'Mills', 'H310');
+
+1 row created.
+
+SQL> INSERT INTO instructor
+  2  VALUES(518, 'Bennette', 'B212');
+
+1 row created.
+
+SQL> INSERT INTO instructor
+  2  VALUES(622, 'Hilbert', 'M301');
+
+1 row created.
+
+SQL> SELECT * FROM instructor;
+
+INSTRUCTOR_ID INSTRUCTOR_NAME                INSTRUC                                                                                                                                                    
+------------- ------------------------------ -------                                                                                                                                                    
+          301 Codds                          B104                                                                                                                                                       
+          451 Parsons                        B317                                                                                                                                                       
+          255 Mills                          H310                                                                                                                                                       
+          518 Bennette                       B212                                                                                                                                                       
+          622 Hilbert                        M301                                                                                                                                                       
+
+SQL> INSERT INTO course
+  2  VALUES('CIS 350', 'Database', 301);
+
+1 row created.
+
+SQL> INSERT INTO course
+  2  VALUES('CIS 465', 'Systems Anal', 451);
+
+1 row created.
+
+SQL> INSERT INTO course
+  2  VALUES('Acc 201', 'Fund of Acctg', 255);
+
+1 row created.
+
+SQL> INSERT INTO course
+  2  VALUES('Mkt 300', 'Into to Mktg', 518);
+
+1 row created.
+
+SQL> INSERT INTO course
+  2  VALUES('Mth 202','College algebra', 622);
+
+1 row created.
+
+SQL> SELECT * FROM course;
+
+COURSE_ COURSE_TITLE                   INSTRUCTOR_ID                                                                                                                                                    
+------- ------------------------------ -------------                                                                                                                                                    
+CIS 350 Database                                 301                                                                                                                                                    
+CIS 465 Systems Anal                             451                                                                                                                                                    
+Acc 201 Fund of Acctg                            255                                                                                                                                                    
+Mkt 300 Into to Mktg                             518                                                                                                                                                    
+Mth 202 College algebra                          622                                                                                                                                                    
+
+SQL> INSERT INTO enroll
+  2  VALUES(268300458,'CIS 350');
+INSERT INTO enroll
+            *
+ERROR at line 1:
+ORA-00947: not enough values 
+
+
+SQL> INSERT INTO enroll
+  2  VALUES(268300458,'CIS 465','B');
+
+1 row created.
+
+SQL> INSERT INTO enroll
+  2  VALUES(543291073,'CIS 350','C');
+
+1 row created.
+
+SQL> INSERT INTO enroll
+  2  VALUES(543291073,'Acc 201','B');
+
+1 row created.
+
+SQL> INSERT INTO enroll
+  2  VALUES(543291073,'Mkt 300','A');
+
+1 row created.
+
+SQL> INSERT INTO enroll
+  2  VALUES(695381127,'Mth 202','B' );
+
+1 row created.
+
+SQL> INSERT INTO enroll
+  2  VALUES(695381127,'Acc 201','A');
+
+1 row created.
+
+SQL> SELECT * FROM enroll;
+
+STUDENT_ID COURSE_ S                                                                                                                                                                                    
+---------- ------- -                                                                                                                                                                                    
+ 268300458 CIS 465 B                                                                                                                                                                                    
+ 543291073 CIS 350 C                                                                                                                                                                                    
+ 543291073 Acc 201 B                                                                                                                                                                                    
+ 543291073 Mkt 300 A                                                                                                                                                                                    
+ 695381127 Mth 202 B                                                                                                                                                                                    
+ 695381127 Acc 201 A                                                                                                                                                                                    
+
+6 rows selected.
+
+SQL> spool off
